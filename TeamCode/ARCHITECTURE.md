@@ -21,15 +21,22 @@ classDiagram
     class MecanumDrivetrain {
         impl: Drivetrain
         +hwManager: Motormanager
+        - Normal Mec Drive
     }
     class SwerveDrivetrain {
         impl: Drivetrain
         +hwManager: SwervePods
+        - Swerve Drive, prob input coax/diffy in constructor
     }
     class SwervePods {
         impl: HardwareManager
         - Thingy to manage swerve pods
         - Maay have to make ts into an inf and have diffy vs coax
+    }
+    class TankDrivetrain {
+        impl: Drivetrain
+        +hwManager: MotorManager
+        - Tank Drive
     }
 
     Drivetrain <|.. MecanumDrivetrain : Mec Drive
