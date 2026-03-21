@@ -182,10 +182,10 @@ data class Pose(
         return this
     }
 
-    fun normalizeAngle(angRad: Double): Double {
-        var a = angRad % (2 * PI)
+    fun normalize(angle: Double): Double {
+        var a = angle % (2 * PI)
         if (a > PI) a -= 2 * PI
         if (a <= -PI) a += 2 * PI
         return a
-    }*/
+    }
 }   
