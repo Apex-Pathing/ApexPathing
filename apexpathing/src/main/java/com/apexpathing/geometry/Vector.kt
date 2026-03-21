@@ -1,5 +1,6 @@
 package com.apexpathing.geometry
 
+import com.apexpathing.util.math.Pose
 import kotlin.math.hypot
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -28,6 +29,7 @@ data class Vector(
     fun dot(other: Vector) = x * other.x + y * other.y
     fun angle() = atan2(y, x)
     fun copy() = Vector(x, y)
+    fun asPose() = Pose(x, y)
 
     fun rotateVector(angle: Double): Vector {
         val cosA = cos(angle)

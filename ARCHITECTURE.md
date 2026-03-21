@@ -10,7 +10,9 @@ com.apexpathing
 ├── drivetrain/      Drive system implementations
 ├── localization/    Position tracking (Localizer interface + implementations)
 ├── hardware/        FTC hardware wrappers (MotorEx, LynxModuleUtil)
-└── util/            Controllers and rate limiters
+└── util/
+    ├── math/        Pose, CoordinateSystem (ApexCoordinates, PedroCoordinates)
+    └── ...          Controllers and rate limiters
 ```
 
 ## Drive System
@@ -94,6 +96,37 @@ classDiagram
     }
 
     Localizer <|.. PinpointLocalizer
+```
+
+## Math Utilities
+
+```mermaid
+classDiagram
+    class Pose {
+        + x, y, heading: Double
+        + coordSystem: CoordinateSystem
+        + distanceTo(Pose): Double
+        + inCoordinateSystem(CoordinateSystem): Pose
+        + rotate(theta): Pose
+        + rotated(theta): Pose
+        + reflectX(at), reflectY(at)
+        + asVector(): Vector
+    }
+    class CoordinateSystem {
+        <<interface>>
+        + toApexCoordinates(Pose): Pose
+        + fromApexCoordinates(Pose): Pose
+    }
+    class ApexCoordinates {
+        <<object>>
+    }
+    class PedroCoordinates {
+        <<object>>
+    }
+
+    CoordinateSystem <|.. ApexCoordinates
+    CoordinateSystem <|.. PedroCoordinates
+    Pose --> CoordinateSystem
 ```
 
 ## Trajectory Following
