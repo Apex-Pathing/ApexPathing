@@ -1,4 +1,4 @@
-@file:Suppress("unused", "PackageName")
+@file:Suppress("unused")
 package com.apexpathing.util.math
 
 import com.apexpathing.geometry.Vector
