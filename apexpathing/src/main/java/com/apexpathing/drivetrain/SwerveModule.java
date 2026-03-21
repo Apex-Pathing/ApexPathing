@@ -1,8 +1,8 @@
 package com.apexpathing.drivetrain;
 
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.apexpathing.hardware.MotorEx;
+import com.apexpathing.hardware.AbsoluteAnalogEncoder;
 
 /**
  * Hardware wrapper handling a drive motor, turn motor (servo), and absolute encoder.
@@ -10,13 +10,14 @@ import com.apexpathing.hardware.MotorEx;
 public class SwerveModule {
     private final MotorEx driveMotor;
     private final Servo turnServo;
-    private final AnalogInput absoluteEncoder;
+    private final AbsoluteAnalogEncoder absoluteEncoder;
 
     private double lastPower = 0.0;
     private double lastPosition = -1.0;
     private static final double CACHE_THRESHOLD = 0.01;
+    private static final double MIN_VELOCITY_FOR_ROTATION = 0.02;
 
-    public SwerveModule(MotorEx driveMotor, Servo turnServo, AnalogInput absoluteEncoder) {
+    public SwerveModule(MotorEx driveMotor, Servo turnServo, AbsoluteAnalogEncoder absoluteEncoder) {
         this.driveMotor = driveMotor;
         this.turnServo = turnServo;
         this.absoluteEncoder = absoluteEncoder;
@@ -30,6 +31,18 @@ public class SwerveModule {
      * @param targetAngleRadians Target angle in radians.
      */
     public void setDesiredState(double targetVelocity, double targetAngleRadians) {
+        setDesiredState(targetVelocity, targetAngleRadians, false);
+    }
+
+    /**
+     * Optimized method to set the module's target velocity and angle.
+     * Includes angle normalization, cosine optimization (wheel flip), and hardware caching.
+     *
+     * @param targetVelocity Target velocity from -1.0 to 1.0.
+     * @param targetAngleRadians Target angle in radians.
+     * @param forceAngle If true, updates the servo position even if velocity is zero.
+     */
+    public void setDesiredState(double targetVelocity, double targetAngleRadians, boolean forceAngle) {
         targetAngleRadians = normalizeAngle(targetAngleRadians);
 
         double currentAngle = getModuleAngle();
@@ -47,9 +60,23 @@ public class SwerveModule {
             lastPower = targetVelocity;
         }
 
-        if (Math.abs(targetPosition - lastPosition) > CACHE_THRESHOLD) {
-            turnServo.setPosition(targetPosition);
-            lastPosition = targetPosition;
+        // Only update angle if moving or forced, to avoid wheels snapping to 0.
+        if (forceAngle || Math.abs(targetVelocity) > MIN_VELOCITY_FOR_ROTATION) {
+            if (Math.abs(targetPosition - lastPosition) > CACHE_THRESHOLD) {
+                turnServo.setPosition(targetPosition);
+                lastPosition = targetPosition;
+            }
+        }
+    }
+
+    /**
+     * Sets the drive motor power directly.
+     * @param power The motor power.
+     */
+    public void setMotorPower(double power) {
+        if (Math.abs(power - lastPower) > CACHE_THRESHOLD) {
+            driveMotor.setPower(power);
+            lastPower = power;
         }
     }
 
@@ -57,7 +84,7 @@ public class SwerveModule {
      * Returns the current module angle in radians from the absolute encoder.
      */
     public double getModuleAngle() {
-        return (absoluteEncoder.getVoltage() / 3.3) * 2.0 * Math.PI;
+        return absoluteEncoder.getCurrentPosition();
     }
 
     /**
@@ -81,4 +108,5 @@ public class SwerveModule {
 
     public double getLastPower() { return lastPower; }
     public double getLastPosition() { return lastPosition; }
+    public AbsoluteAnalogEncoder getEncoder() { return absoluteEncoder; }
 }

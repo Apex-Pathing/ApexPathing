@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.apexpathing.geometry.Pose2d;
 import com.apexpathing.geometry.Vector2d;
 import com.apexpathing.hardware.MotorEx;
+import com.apexpathing.hardware.AbsoluteAnalogEncoder;
 import com.apexpathing.kinematics.ChassisSpeeds;
 import com.apexpathing.kinematics.SwerveKinematics;
 import com.apexpathing.kinematics.SwerveModuleState;
@@ -23,6 +24,7 @@ import java.util.List;
 public class SwerveDrive extends CustomDrive {
     private final SwerveModule[] modules = new SwerveModule[4];
     private final SwerveKinematics kinematics;
+    private boolean locked = false;
 
     public SwerveDrive(HardwareMap hardwareMap, Localizer localizer, Vector2d[] moduleOffsets) {
         this.localizer = localizer;
@@ -33,9 +35,10 @@ public class SwerveDrive extends CustomDrive {
         for (int i = 0; i < 4; i++) {
             MotorEx driveMotor = new MotorEx(hardwareMap.get(DcMotorEx.class, moduleNames[i] + "Drive"));
             Servo turnServo = hardwareMap.get(Servo.class, moduleNames[i] + "Turn");
-            AnalogInput absoluteEncoder = hardwareMap.get(AnalogInput.class, moduleNames[i] + "Encoder");
+            AnalogInput analogInput = hardwareMap.get(AnalogInput.class, moduleNames[i] + "Encoder");
+            AbsoluteAnalogEncoder encoder = new AbsoluteAnalogEncoder(analogInput);
 
-            modules[i] = new SwerveModule(driveMotor, turnServo, absoluteEncoder);
+            modules[i] = new SwerveModule(driveMotor, turnServo, encoder);
         }
     }
 
@@ -45,6 +48,15 @@ public class SwerveDrive extends CustomDrive {
     @Override
     public void setDrivePowers(Pose2d drivePowers) {
         this.targetVelocity = drivePowers;
+
+        if (locked) {
+            double[] lockAngles = {Math.PI / 4.0, -Math.PI / 4.0, 3.0 * Math.PI / 4.0, -3.0 * Math.PI / 4.0};
+            for (int i = 0; i < 4; i++) {
+                modules[i].setDesiredState(0, lockAngles[i], true);
+            }
+            return;
+        }
+
         ChassisSpeeds chassisSpeeds = new ChassisSpeeds(drivePowers.x, drivePowers.y, drivePowers.heading);
         SwerveModuleState[] states = kinematics.calculate(chassisSpeeds);
 
@@ -57,7 +69,14 @@ public class SwerveDrive extends CustomDrive {
     public void update() {
         localizer.update();
         currentPose = localizer.getPose();
+    }
 
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 
     public List<Double> getModulePositions() {
@@ -90,6 +109,10 @@ public class SwerveDrive extends CustomDrive {
             actuals[i] = modules[i].getModuleAngle();
         }
         return actuals;
+    }
+
+    public SwerveModule[] getModules() {
+        return modules;
     }
 
     public Pose2d getCurrentPose() {
