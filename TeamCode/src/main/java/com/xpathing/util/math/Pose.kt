@@ -1,7 +1,11 @@
 package com.xpathing.util.math
 
+
 import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlin.math.sqrt
+
 
 data class Pose(
     @get:JvmName("x") var x: Double = 0.0,
@@ -137,28 +141,15 @@ data class Pose(
         y *= -1
         heading *= -1
     }
+    fun copyPose(): Pose = Pose(x, y, heading, Vector.coordSys)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
     /**
     *@param at A [Double] that we can flip the pose over (y = at)
     *@return A [Pose] that contains the reflection of the pose over the x-axis parallel line
     */
     fun reflectX(at: Double) = apply {
         y = 2 * at - y
-        heading = normalizeAngle(-heading)
+        heading = normalize(-heading)
     }
 
     /**
@@ -167,18 +158,18 @@ data class Pose(
     */
     fun reflectY(at: Double) = apply {
         x = 2 * at - x
-        heading = normalizeAngle(PI - heading)
+        heading = normalize(PI - heading)
     }
 
     /**
     *@param at A [Double] offset for the line y = x + at
     *@return A [Pose] that contains the reflection of the pose over the line y = x + at
     */
-    fun reflectYX(at: Double): Pose { 
+    fun reflectYX(at: Double): Pose {
         val oldX = x
         x = y - at
         y = oldX + at
-        heading = normalizeAngle(PI / 2.0 - heading)
+        heading = normalize(PI / 2.0 - heading)
         return this
     }
 
@@ -187,5 +178,27 @@ data class Pose(
         if (a > PI) a -= 2 * PI
         if (a <= -PI) a += 2 * PI
         return a
+
     }
-}   
+    fun rotate(angle: Double): Pose {
+        val cosA = cos(angle)
+        val sinA = sin(angle)
+        return Pose(
+            x * cosA - y * sinA,
+            x * sinA + y * cosA,
+            normalize(heading + angle),
+            _coordSystem = Vector.coordSys
+        )
+    }
+    object coordSys : CoordinateSystem {
+        override fun toApexCoordinates(pose: Pose): Pose {
+            TODO("Not yet implemented")
+        }
+
+        override fun fromApexCoordinates(pose: Pose): Pose {
+            TODO("Not yet implemented")
+        }
+
+    }
+}
+

@@ -33,10 +33,10 @@ abstract class LocalizerBase() {
     // Add the @Pathing annotation stuff here
 
     // Stores the last position so that way we can calculate velocity
-    var lastPosition: Pose = Pose(0.0,0.0,0.0)
+    var lastPosition: Pose = Pose(0.0,0.0,0.0, _coordSystem = Vector.coordSys)
     // Stores the last velocity so that way we can calculate acceleration
     private var lastVelocity: Vector = Vector(0.0,0.0)
-    var currentPosition: Pose = Pose(0.0,0.0,0.0)
+    var currentPosition: Pose = Pose(0.0,0.0,0.0, _coordSystem = Vector.coordSys)
     var currentVelocity: Vector = Vector(0.0,0.0)
     var currentAcceleration: Vector = Vector(0.0,0.0)
 

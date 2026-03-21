@@ -1,6 +1,7 @@
 package com.xpathing.util.math
 
 
+
 import kotlin.math.hypot
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -18,9 +19,21 @@ data class Vector(
     fun dot(other: Vector) = x * other.x + y * other.y
     fun angle() = atan2(y, x)
     fun copy() = Vector(x, y)
+    fun asPose(heading: Double = 0.0): Pose = Pose(x, y, heading, _coordSystem =  coordSys )
 
+    object coordSys : CoordinateSystem {
+        override fun toApexCoordinates(pose: Pose): Pose {
+            TODO("Not yet implemented")
+        }
+
+        override fun fromApexCoordinates(pose: Pose): Pose {
+            TODO("Not yet implemented")
+        }
+
+    }
     companion object {
         fun fromPolar(magnitude: Double, angle: Double) =
             Vector(magnitude * cos(angle), magnitude * sin(angle))
     }
+
 }
