@@ -8,14 +8,14 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import com.ApexPathing.drivetrains.driveconstants.MecanumConstants;
 import com.ApexPathing.util.math.Vector;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.List;
 
-public class MecanumDrive {
-    private final DcMotorEx leftFront;
-    private final DcMotorEx leftRear;
-    private final DcMotorEx rightFront;
-    private final DcMotorEx rightRear;
+public class MecanumDrive extends Drivetrain {
+
     private final List<DcMotorEx> motors;
     private final VoltageSensor voltageSensor;
     private final double[] lastMotorPowers;
@@ -39,12 +39,8 @@ public class MecanumDrive {
      * @param hardwareMap      this is the HardwareMap object that contains the motors and other hardware
      * @param mecanumConstants this is the MecanumConstants object that contains the names of the motors and directions etc.
      */
-    public MecanumDrive(HardwareMap hardwareMap, MecanumConstants mecanumConstants, String leftFrontMotorName, String rightFrontMotorName, String leftRearMotorName, String rightRearMotorName) {
-
-        this.leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
-        this.leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
-        this.rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
-        this.rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
+    public MecanumDrive(HardwareMap hardwareMap, Telemetry telemetry, MecanumConstants mecanumConstants, @NotNull String leftFrontMotorName, @NotNull String rightFrontMotorName, @NotNull String leftRearMotorName, @NotNull String rightRearMotorName) {
+        super(hardwareMap, telemetry, mecanumConstants.useBrakeModeInTeleOp, leftFrontMotorName, rightFrontMotorName, leftRearMotorName, rightRearMotorName);
 
         this.motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
         this.lastMotorPowers = new double[]{0, 0, 0, 0};
@@ -74,6 +70,16 @@ public class MecanumDrive {
                 new Vector(copiedFrontLeftVector.getMagnitude(), copiedFrontLeftVector.getTheta())};
     }
 
+    @Override
+    public void drive(double x, double y, double turn) {
+        botCentricDrive(x, y, turn);
+    }
+
+    @Override
+    public void driveFieldCentric(double x, double y, double turn, double heading) {
+        fieldCentricDrive(x, y, turn, heading);
+    }
+
     public void updateConstants() {
         leftFront.setDirection(constants.leftFrontMotorDirection);
         leftRear.setDirection(constants.leftRearMotorDirection);
@@ -87,25 +93,21 @@ public class MecanumDrive {
     }
 
     private void setMotorsToBrake() {
-        for (DcMotorEx motor : motors) {
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
+        setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     /**
      * This sets the motors to the zero power behavior of float.
      */
     private void setMotorsToFloat() {
-        for (DcMotorEx motor : motors) {
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        }
+        setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
     public void breakFollowing() {
         for (int i = 0; i < motors.size(); i++) {
             lastMotorPowers[i] = 0;
-            motors.get(i).setPower(0);
         }
+        stop();
         setMotorsToFloat();
     }
 
@@ -114,7 +116,7 @@ public class MecanumDrive {
             if (Math.abs(lastMotorPowers[i] - drivePowers[i]) > motorCachingThreshold ||
                     (drivePowers[i] == 0 && lastMotorPowers[i] != 0)) {
                 lastMotorPowers[i] = drivePowers[i];
-                motors.get(i).setPower(drivePowers[i]);
+                setPower(motors.get(i), drivePowers[i]);
             }
         }
     }
@@ -132,6 +134,7 @@ public class MecanumDrive {
             setMotorsToFloat();
         }
     }
+
     public void fieldCentricDrive(double x, double y, double turn, double robotHeading) {
         double cos = Math.cos(-robotHeading);
         double sin = Math.sin(-robotHeading);
@@ -157,6 +160,7 @@ public class MecanumDrive {
 
         runDrive(powers);
     }
+
     public void botCentricDrive(double x, double y, double turn) {
         double adjX = deadzone(x, 0.05);
         double adjY = deadzone(y, 0.05);
