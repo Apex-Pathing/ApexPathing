@@ -88,10 +88,10 @@ public class MecanumDrive extends Drivetrain {
 
         Vector copiedFrontLeftVector = mecanumConstants.frontLeftVector.normalize();
         vectors = new Vector[]{
-                new Vector(copiedFrontLeftVector.getMagnitude(), copiedFrontLeftVector.getTheta()),
-                new Vector(copiedFrontLeftVector.getMagnitude(), 2 * Math.PI - copiedFrontLeftVector.getTheta()),
-                new Vector(copiedFrontLeftVector.getMagnitude(), 2 * Math.PI - copiedFrontLeftVector.getTheta()),
-                new Vector(copiedFrontLeftVector.getMagnitude(), copiedFrontLeftVector.getTheta())};
+                new Vector(copiedFrontLeftVector.magnitude(), copiedFrontLeftVector.theta()),
+                new Vector(copiedFrontLeftVector.magnitude(), 2 * Math.PI - copiedFrontLeftVector.theta()),
+                new Vector(copiedFrontLeftVector.magnitude(), 2 * Math.PI - copiedFrontLeftVector.theta()),
+                new Vector(copiedFrontLeftVector.magnitude(), copiedFrontLeftVector.theta())};
     }
 
     /**
@@ -268,25 +268,25 @@ public class MecanumDrive extends Drivetrain {
     }
 
     public double[] calculateDrive(Vector correctivePower, Vector headingPower, Vector pathingPower, double robotHeading) {
-        if (correctivePower.getMagnitude() > maxPowerScaling)
+        if (correctivePower.magnitude() > maxPowerScaling)
             correctivePower.setMagnitude(maxPowerScaling);
-        if (headingPower.getMagnitude() > maxPowerScaling)
+        if (headingPower.magnitude() > maxPowerScaling)
             headingPower.setMagnitude(maxPowerScaling);
-        if (pathingPower.getMagnitude() > maxPowerScaling)
+        if (pathingPower.magnitude() > maxPowerScaling)
             pathingPower.setMagnitude(maxPowerScaling);
 
         double[] wheelPowers = new double[4];
         Vector[] mecanumVectorsCopy = new Vector[4];
         Vector[] truePathingVectors = new Vector[2];
 
-        if (correctivePower.getMagnitude() == maxPowerScaling) {
+        if (correctivePower.magnitude() == maxPowerScaling) {
             truePathingVectors[0] = correctivePower.copy();
             truePathingVectors[1] = correctivePower.copy();
         } else {
             Vector leftSideVector = correctivePower.minus(headingPower);
             Vector rightSideVector = correctivePower.plus(headingPower);
 
-            if (leftSideVector.getMagnitude() > maxPowerScaling || rightSideVector.getMagnitude() > maxPowerScaling) {
+            if (leftSideVector.magnitude() > maxPowerScaling || rightSideVector.magnitude() > maxPowerScaling) {
                 double headingScalingFactor = Math.min(findNormalizingScaling(correctivePower, headingPower, maxPowerScaling), findNormalizingScaling(correctivePower, headingPower.times(-1), maxPowerScaling));
                 truePathingVectors[0] = correctivePower.minus(headingPower.times(headingScalingFactor));
                 truePathingVectors[1] = correctivePower.plus(headingPower.times(headingScalingFactor));
@@ -294,7 +294,7 @@ public class MecanumDrive extends Drivetrain {
                 Vector leftSideVectorWithPathing = leftSideVector.plus(pathingPower);
                 Vector rightSideVectorWithPathing = rightSideVector.plus(pathingPower);
 
-                if (leftSideVectorWithPathing.getMagnitude() > maxPowerScaling || rightSideVectorWithPathing.getMagnitude() > maxPowerScaling) {
+                if (leftSideVectorWithPathing.magnitude() > maxPowerScaling || rightSideVectorWithPathing.magnitude() > maxPowerScaling) {
                     double pathingScalingFactor = Math.min(findNormalizingScaling(leftSideVector, pathingPower, maxPowerScaling), findNormalizingScaling(rightSideVector, pathingPower, maxPowerScaling));
                     truePathingVectors[0] = leftSideVector.plus(pathingPower.times(pathingScalingFactor));
                     truePathingVectors[1] = rightSideVector.plus(pathingPower.times(pathingScalingFactor));
@@ -310,13 +310,13 @@ public class MecanumDrive extends Drivetrain {
 
         for (int i = 0; i < mecanumVectorsCopy.length; i++) {
             mecanumVectorsCopy[i] = vectors[i].copy();
-            mecanumVectorsCopy[i].rotateVector(robotHeading);
+            mecanumVectorsCopy[i].rotatedVec(robotHeading);
         }
 
-        wheelPowers[0] = (mecanumVectorsCopy[1].getXComponent() * truePathingVectors[0].getYComponent() - truePathingVectors[0].getXComponent() * mecanumVectorsCopy[1].getYComponent()) / (mecanumVectorsCopy[1].getXComponent() * mecanumVectorsCopy[0].getYComponent() - mecanumVectorsCopy[0].getXComponent() * mecanumVectorsCopy[1].getYComponent());
-        wheelPowers[1] = (mecanumVectorsCopy[0].getXComponent() * truePathingVectors[0].getYComponent() - truePathingVectors[0].getXComponent() * mecanumVectorsCopy[0].getYComponent()) / (mecanumVectorsCopy[0].getXComponent() * mecanumVectorsCopy[1].getYComponent() - mecanumVectorsCopy[1].getXComponent() * mecanumVectorsCopy[0].getYComponent());
-        wheelPowers[2] = (mecanumVectorsCopy[3].getXComponent() * truePathingVectors[1].getYComponent() - truePathingVectors[1].getXComponent() * mecanumVectorsCopy[3].getYComponent()) / (mecanumVectorsCopy[3].getXComponent() * mecanumVectorsCopy[2].getYComponent() - mecanumVectorsCopy[2].getXComponent() * mecanumVectorsCopy[3].getYComponent());
-        wheelPowers[3] = (mecanumVectorsCopy[2].getXComponent() * truePathingVectors[1].getYComponent() - truePathingVectors[1].getXComponent() * mecanumVectorsCopy[2].getYComponent()) / (mecanumVectorsCopy[2].getXComponent() * mecanumVectorsCopy[3].getYComponent() - mecanumVectorsCopy[3].getXComponent() * mecanumVectorsCopy[2].getYComponent());
+        wheelPowers[0] = (mecanumVectorsCopy[1].xComponent() * truePathingVectors[0].yComponent() - truePathingVectors[0].xComponent() * mecanumVectorsCopy[1].yComponent()) / (mecanumVectorsCopy[1].xComponent() * mecanumVectorsCopy[0].yComponent() - mecanumVectorsCopy[0].xComponent() * mecanumVectorsCopy[1].yComponent());
+        wheelPowers[1] = (mecanumVectorsCopy[0].xComponent() * truePathingVectors[0].yComponent() - truePathingVectors[0].xComponent() * mecanumVectorsCopy[0].yComponent()) / (mecanumVectorsCopy[0].xComponent() * mecanumVectorsCopy[1].yComponent() - mecanumVectorsCopy[1].xComponent() * mecanumVectorsCopy[0].yComponent());
+        wheelPowers[2] = (mecanumVectorsCopy[3].xComponent() * truePathingVectors[1].yComponent() - truePathingVectors[1].xComponent() * mecanumVectorsCopy[3].yComponent()) / (mecanumVectorsCopy[3].xComponent() * mecanumVectorsCopy[2].yComponent() - mecanumVectorsCopy[2].xComponent() * mecanumVectorsCopy[3].yComponent());
+        wheelPowers[3] = (mecanumVectorsCopy[2].xComponent() * truePathingVectors[1].yComponent() - truePathingVectors[1].xComponent() * mecanumVectorsCopy[2].yComponent()) / (mecanumVectorsCopy[2].xComponent() * mecanumVectorsCopy[3].yComponent() - mecanumVectorsCopy[3].xComponent() * mecanumVectorsCopy[2].yComponent());
 
         if (voltageCompensation) {
             double voltageNormalized = getVoltageNormalized();
@@ -338,9 +338,9 @@ public class MecanumDrive extends Drivetrain {
     }
 
     private double findNormalizingScaling(Vector base, Vector addition, double maxMagnitude) {
-        double a = addition.getXComponent() * addition.getXComponent() + addition.getYComponent() * addition.getYComponent();
-        double b = 2 * (base.getXComponent() * addition.getXComponent() + base.getYComponent() * addition.getYComponent());
-        double c = base.getXComponent() * base.getXComponent() + base.getYComponent() * base.getYComponent() - maxMagnitude * maxMagnitude;
+        double a = addition.xComponent() * addition.xComponent() + addition.yComponent() * addition.yComponent();
+        double b = 2 * (base.xComponent() * addition.xComponent() + base.yComponent() * addition.yComponent());
+        double c = base.xComponent() * base.xComponent() + base.yComponent() * base.yComponent() - maxMagnitude * maxMagnitude;
         double discriminant = b * b - 4 * a * c;
         return (-b + Math.sqrt(discriminant)) / (2 * a);
     }

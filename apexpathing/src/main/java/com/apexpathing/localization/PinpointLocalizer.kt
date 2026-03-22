@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D
-import com.apexpathing.geometry.Pose2d
+import com.apexpathing.util.math.Pose
 
 /**
  * GoBilda Pinpoint odometry localizer
@@ -20,9 +20,9 @@ class PinpointLocalizer(
 ) : Localizer {
 
     private lateinit var pinpoint: GoBildaPinpointDriver
-    private var currentPose = Pose2d(0.0, 0.0, 0.0)
-    private var lastPose = Pose2d(0.0, 0.0, 0.0)
-    private var currentVelocity = Pose2d(0.0, 0.0, 0.0)
+    private var currentPose = Pose(0.0, 0.0, 0.0)
+    private var lastPose = Pose(0.0, 0.0, 0.0)
+    private var currentVelocity = Pose(0.0, 0.0, 0.0)
 
     fun init() {
         pinpoint = hardwareMap.get(GoBildaPinpointDriver::class.java, deviceName)
@@ -40,24 +40,24 @@ class PinpointLocalizer(
         val pos = pinpoint.position
 
         lastPose = currentPose
-        currentPose = Pose2d(
+        currentPose = Pose(
             pos.getX(DistanceUnit.INCH),
             pos.getY(DistanceUnit.INCH),
             pinpoint.getHeading(AngleUnit.RADIANS)
         )
 
-        currentVelocity = Pose2d(
+        currentVelocity = Pose(
             currentPose.x - lastPose.x,
             currentPose.y - lastPose.y,
             currentPose.heading - lastPose.heading
         )
     }
 
-    override fun getPose(): Pose2d = currentPose
+    override fun getPose(): Pose = currentPose
 
-    override fun getVelocity(): Pose2d = currentVelocity
+    override fun getVelocity(): Pose = currentVelocity
 
-    override fun setPose(pose: Pose2d) {
+    override fun setPose(pose: Pose) {
         currentPose = pose
         lastPose = pose
         pinpoint.setPosition(
