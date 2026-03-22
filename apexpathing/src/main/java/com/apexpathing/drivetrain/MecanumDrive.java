@@ -21,9 +21,9 @@ import java.util.List;
  */
 public class MecanumDrive extends Drivetrain {
 
-    private final List<DcMotorEx> motors;
-    private final VoltageSensor voltageSensor;
-    private final double[] lastMotorPowers;
+    private List<DcMotorEx> motors;
+    private VoltageSensor voltageSensor;
+    private double[] lastMotorPowers;
 
     private double motorCachingThreshold;
     private boolean useBrakeModeInTeleOp;
@@ -36,11 +36,37 @@ public class MecanumDrive extends Drivetrain {
 
     MecanumConstants constants = new MecanumConstants();
 
-    //default constructor
+    private DcMotorEx leftFront, leftRear, rightFront, rightRear;
+    private String leftFrontMotorName, leftRearMotorName, rightFrontMotorName, rightRearMotorName;
+
+    /**
+     * This creates a new Mecanum, which takes in various movement vectors and outputs
+     * the wheel drive powers necessary to move in the intended direction, given the true movement
+     * vector for the front left mecanum wheel.
+     *
+     * @param hardwareMap      this is the HardwareMap object that contains the motors and other hardware
+     * @param mecanumConstants this is the MecanumConstants object that contains the names of the motors and directions etc.
+     */
     public MecanumDrive(HardwareMap hardwareMap, Telemetry telemetry, MecanumConstants mecanumConstants, @NotNull String leftFrontMotorName, @NotNull String rightFrontMotorName, @NotNull String leftRearMotorName, @NotNull String rightRearMotorName) {
-        super(hardwareMap, telemetry, mecanumConstants.useBrakeModeInTeleOp, leftFrontMotorName, rightFrontMotorName, leftRearMotorName, rightRearMotorName);
+        super(hardwareMap, telemetry);
+        this.mecanumConstants = mecanumConstants;
+        this.leftFrontMotorName = leftFrontMotorName;
+        this.rightFrontMotorName = rightFrontMotorName;
+        this.leftRearMotorName = leftRearMotorName;
+        this.rightRearMotorName = rightRearMotorName;
+    }
+
+    MecanumConstants mecanumConstants;
+
+    @Override
+    public void initDriveTrain() {
+        leftFront = (DcMotorEx)hardwareMap.get(DcMotor.class, leftFrontMotorName);
+        leftRear = (DcMotorEx)hardwareMap.get(DcMotor.class, leftRearMotorName);
+        rightFront = (DcMotorEx)hardwareMap.get(DcMotor.class, rightFrontMotorName);
+        rightRear = (DcMotorEx)hardwareMap.get(DcMotor.class, rightRearMotorName);
 
         this.motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
+
         this.lastMotorPowers = new double[]{0, 0, 0, 0};
 
         this.voltageSensor = hardwareMap.voltageSensor.iterator().next();
@@ -68,12 +94,19 @@ public class MecanumDrive extends Drivetrain {
                 new Vector(copiedFrontLeftVector.getMagnitude(), copiedFrontLeftVector.getTheta())};
     }
 
+    /**
+     * @param args, an array of Doubles such that [0] == x, [1] == y, [2] == rx
+     */
     @Override
-    public void driveBasedOnInputs(double x, double y, double turn) {
-        botCentricDrive(x, y, turn);
+    public void drive(double ...args) {
+        botCentricDrive(args[0], args[1], args[2]);
     }
 
     @Override
+    public void turn(double power) {
+        drive(0.0,0.0,power);
+    }
+
     public void driveFieldCentric(double x, double y, double turn, double heading) {
         fieldCentricDrive(x, y, turn, heading);
     }
@@ -91,18 +124,26 @@ public class MecanumDrive extends Drivetrain {
     }
 
     private void setMotorsToBrake() {
-        setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        for (DcMotorEx m: motors) {
+            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
     }
 
+    /**
+     * This sets the motors to the zero power behavior of float.
+     */
     private void setMotorsToFloat() {
-        setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        for (DcMotorEx m: motors) {
+            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
     }
 
     public void breakFollowing() {
         for (int i = 0; i < motors.size(); i++) {
             lastMotorPowers[i] = 0;
         }
-        cutMotorPower();
+        drive(0.0,0.0,0.0); // Drive(0.0,0.0,0.0) === stop()
+
         setMotorsToFloat();
     }
 
@@ -141,10 +182,10 @@ public class MecanumDrive extends Drivetrain {
         turn  = deadzone(turn, 0.05);
 
         double[] powers = new double[]{
-                fieldY + fieldX + turn,
-                fieldY - fieldX + turn,
-                fieldY - fieldX - turn,
-                fieldY + fieldX - turn
+                fieldY + fieldX + turn,  // leftFront
+                fieldY - fieldX + turn,  // leftRear
+                fieldY - fieldX - turn,  // rightFront
+                fieldY + fieldX - turn   // rightRear
         };
 
         double max = Math.max(Math.max(Math.abs(powers[0]), Math.abs(powers[1])),
@@ -162,10 +203,10 @@ public class MecanumDrive extends Drivetrain {
         turn = deadzone(turn, 0.05);
 
         double[] powers = new double[]{
-                adjY + adjX + turn,
-                adjY - adjX + turn,
-                adjY - adjX - turn,
-                adjY + adjX - turn
+                adjY + adjX + turn,  // left front
+                adjY - adjX + turn,  // left rear
+                adjY - adjX - turn,  // right front
+                adjY + adjX - turn   // Right rear
         };
 
         double max = Math.max(Math.max(Math.abs(powers[0]), Math.abs(powers[1])),
@@ -185,11 +226,20 @@ public class MecanumDrive extends Drivetrain {
         runDrive(calculateDrive(correctivePower, headingPower, pathingPower, robotHeading));
     }
 
-    public double xVelocity() { return constants.xVelocity; }
-    public double yVelocity() { return constants.yVelocity; }
+    public double xVelocity() {
+        return constants.xVelocity;
+    }
+
+    public double yVelocity() {
+        return constants.yVelocity;
+    }
+
     public void setXVelocity(double xMovement) { constants.setXVelocity(xMovement); }
     public void setYVelocity(double yMovement) { constants.setYVelocity(yMovement); }
-    public double getStaticFrictionCoefficient() { return staticFrictionCoefficient; }
+
+    public double getStaticFrictionCoefficient() {
+        return staticFrictionCoefficient;
+    }
 
     public double getVoltage() {
         return voltageSensor.getVoltage();
@@ -201,7 +251,21 @@ public class MecanumDrive extends Drivetrain {
                 (voltage - ((nominalVoltage * nominalVoltage / voltage) * staticFrictionCoefficient));
     }
 
-    public List<DcMotorEx> getMotors() { return motors; }
+    public String debugString() {
+        return "Mecanum{" +
+                " leftFront=" + leftFront +
+                ", leftRear=" + leftRear +
+                ", rightFront=" + rightFront +
+                ", rightRear=" + rightRear +
+                ", motors=" + motors +
+                ", motorCachingThreshold=" + motorCachingThreshold +
+                ", useBrakeModeInTeleOp=" + useBrakeModeInTeleOp +
+                '}';
+    }
+
+    public List<DcMotorEx> getMotors() {
+        return motors;
+    }
 
     public double[] calculateDrive(Vector correctivePower, Vector headingPower, Vector pathingPower, double robotHeading) {
         if (correctivePower.getMagnitude() > maxPowerScaling)
