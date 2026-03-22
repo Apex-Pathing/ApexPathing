@@ -1,30 +1,44 @@
 package com.apexpathing.localization;
 
-import com.apexpathing.geometry.Pose2d;
 import com.apexpathing.util.math.Pose;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-/**
- * A localizer using Limelight vision data.
- */
-public class LimelightLocalizer implements Localizer {
-    private Pose currentPose = new Pose(0, 0, 0);
-    private Pose currentVelocity = new Pose(0, 0, 0);
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.jetbrains.annotations.NotNull;
 
-    public LimelightLocalizer(HardwareMap hardwareMap) {
-        // Initialization logic for Limelight would go here
+import java.util.List;
+
+/**
+ * Limelight Class localizer for apriltags
+ * @author Xander Haemel - 31616 404 not found
+ */
+public class LimelightLocalizer  {
+    Limelight3A limelight3A;
+    LLResult limelightResult;
+    public void switchPipeline(int pipelineNumber){
+        limelight3A.pipelineSwitch(pipelineNumber);
+    }
+    public LimelightLocalizer(HardwareMap hardwareMap, @NotNull String LimelightName){
+        limelight3A = hardwareMap.get(Limelight3A.class, LimelightName);
     }
 
-    @Override
+    /**
+     * get fidicual results
+     * @return the List of apriltags with their respective ID's
+     */
+    public List<LLResultTypes.FiducialResult> getTagIDs(){
+        return limelightResult.getFiducialResults();
+    }
+
+    /**
+     * updates the limelight Result
+     */
     public void update() {
-        // Limelight update logic:
-        // 1. Get latest vision result
-        // 2. Transform to field coordinates
-        // 3. Update currentPose
-        // For now, this is a skeleton.
+        limelightResult = limelight3A.getLatestResult();
     }
 
     /**
@@ -37,22 +51,6 @@ public class LimelightLocalizer implements Localizer {
         double y = botPose.getPosition().y;
         double heading = botPose.getOrientation().getYaw(AngleUnit.RADIANS);
         Pose returnPose = new Pose(x, y, heading);
-        return returnPose;
-    }
-
-    @Override
-    public Pose getVelocity() {
-        return currentVelocity;
-    }
-
-    @Override
-    public void setPose(Pose pose) {
-        this.currentPose = pose;
-    }
-
-    public Pose updateWithVision(double x, double y, double heading) {
-        Pose returnPose = new Pose(x, y, heading);
-        this.currentPose = returnPose;
         return returnPose;
     }
 }

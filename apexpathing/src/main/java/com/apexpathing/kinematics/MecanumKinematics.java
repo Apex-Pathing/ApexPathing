@@ -2,6 +2,8 @@ package com.apexpathing.kinematics;
 
 /**
  * Specialized MecanumKinematics class.
+ * @author Krish - 26192 Heatwaves
+ * @author Xander Haemel - 31616 404 not found
  */
 public class MecanumKinematics extends Kinematics {
     private final double trackWidth;
@@ -18,6 +20,11 @@ public class MecanumKinematics extends Kinematics {
         this.lateralMultiplier = lateralMultiplier;
     }
 
+    /**
+     * calculate motor speeds based on the mecanum equation
+     * @param chassisSpeeds speeds we need the chassis to go at
+     * @return a double [] array of the motor powers, fl, fr, bl, br
+     */
     public double[] calculateWheelSpeeds(ChassisSpeeds chassisSpeeds) {
         double vx = chassisSpeeds.vx;
         double vy = chassisSpeeds.vy * lateralMultiplier;
