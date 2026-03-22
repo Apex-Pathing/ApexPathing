@@ -6,10 +6,15 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author Krish - 26192
+ * @author Xander Haemel - 31616
+ */
 public class TankDrive extends Drivetrain {
 
     boolean fourWheelDrive;
 
+    //constructor for 2 motor drive
     public TankDrive(HardwareMap hardwareMap, Telemetry telemetry,
                      boolean useBrakeMode,
                      @NotNull String leftFrontName,
@@ -18,6 +23,7 @@ public class TankDrive extends Drivetrain {
         this.fourWheelDrive = false;
     }
 
+    //constructor for 4 motor drive
     public TankDrive(HardwareMap hardwareMap,
                      Telemetry telemetry,
                      boolean useBrakeMode,
@@ -29,11 +35,11 @@ public class TankDrive extends Drivetrain {
         this.fourWheelDrive = true;
     }
 
+    //function that sets the powers based on input
     @Override
-    public void drive(double x, double y, double turn) {
+    public void driveBasedOnInputs(double x, double y, double turn) {
         double left  = Range.clip(y + turn, -1, 1);
         double right = Range.clip(y - turn, -1, 1);
-
         if (!fourWheelDrive) {
             setPower(leftFront, left);
             setPower(rightFront, right);

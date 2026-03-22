@@ -34,7 +34,7 @@ public abstract class Drivetrain {
         rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
         rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        setMotorMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setMotorRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         if (useBrakeMode) {
             setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -62,15 +62,15 @@ public abstract class Drivetrain {
         rightRearServo = hardwareMap.get(Servo.class, rightRearServoName);
     }
 
-    public abstract void drive(double x, double y, double turn);
+    public abstract void driveBasedOnInputs(double x, double y, double turn);
 
     public abstract void driveFieldCentric(double x, double y, double turn, double heading);
 
-    public void stop() {
+    public void cutMotorPower() {
         setPower(0);
     }
 
-    public void setMotorMode(DcMotor.RunMode mode) {
+    public void setMotorRunMode(DcMotor.RunMode mode) {
         leftFront.setMode(mode);
         leftRear.setMode(mode);
         rightFront.setMode(mode);
@@ -125,8 +125,8 @@ public abstract class Drivetrain {
     }
 
     public void resetEncoders() {
-        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setMotorMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setMotorRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMotorRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void logMotors() {

@@ -108,5 +108,7 @@ public class SwerveModule {
 
     public double getLastPower() { return lastPower; }
     public double getLastPosition() { return lastPosition; }
+
+    //for swerve
     public AbsoluteAnalogEncoder getEncoder() { return absoluteEncoder; }
 }

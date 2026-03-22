@@ -9,7 +9,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D
 import com.apexpathing.geometry.Pose2d
 
 /**
- * GoBilda Pinpoint odometry localizer.
+ * GoBilda Pinpoint odometry localizer
+ * @Author Sohum Arora 22985
  */
 class PinpointLocalizer(
     private val hardwareMap: HardwareMap,
