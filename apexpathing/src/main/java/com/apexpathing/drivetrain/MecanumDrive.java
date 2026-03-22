@@ -15,9 +15,9 @@ import java.util.List;
 
 /**
  * A class that defines the Mecanum Drivetrain: a child class of the Drivetrain
+ * @author Sohum Arora 22985
  * @author Krish 26192
  * @author Xander Haemel- 31616
- *
  */
 public class MecanumDrive extends Drivetrain {
 
