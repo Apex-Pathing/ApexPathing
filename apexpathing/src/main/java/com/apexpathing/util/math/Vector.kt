@@ -99,7 +99,7 @@ data class Vector
      * @param ang The angle to rotate the vector by
      * @return A new vector that is the rotated form of this vector
      */
-    fun rotateVector(ang: Double) =
+    fun rotateVec(ang: Double) =
         fromPolar(magnitude, normalize(this.theta + ang))
 
     /**
@@ -109,7 +109,7 @@ data class Vector
      * @param ang The angle to rotate the vector by
      * @return This vector with the rotation applied to it
      */
-    fun rotatedVector(ang: Double) = apply {
+    fun rotatedVec(ang: Double) = apply {
        theta = normalize(theta + ang)
     }
 
@@ -125,7 +125,7 @@ data class Vector
      * Normalizes the vector to have a magnitude of 1.
      * @return The normalized vector.
      */
-    fun normalizeVector(): Vector {
+    fun normalize(): Vector {
         val mag = magnitude
         return if (mag > 1e-9) this / mag else Vector(0.0, 0.0)
     }

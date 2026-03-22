@@ -6,6 +6,7 @@ import com.apexpathing.util.math.Vector;
 /**
  * A trajectory follower for holonomic robots (Mecanum, Swerve).
  * Uses PD feedback, acceleration feedforward, and centripetal force compensation.
+  * @author Krish Joshi - 26192 Heatwaves
  */
 public class HolonomicTrajectoryFollower {
     public static double kPx = 1.0;

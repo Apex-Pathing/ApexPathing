@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author Krish Joshi - 26192 Heatwaves
+ */
 public class TankDrive extends Drivetrain {
 
     boolean FourWheelDrive;

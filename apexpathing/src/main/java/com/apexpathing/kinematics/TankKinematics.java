@@ -2,6 +2,7 @@ package com.apexpathing.kinematics;
 
 /**
  * Specialized TankKinematics class.
+  * @author Krish Joshi - 26192 Heatwaves
  */
 public class TankKinematics extends Kinematics {
     private final double trackWidth;

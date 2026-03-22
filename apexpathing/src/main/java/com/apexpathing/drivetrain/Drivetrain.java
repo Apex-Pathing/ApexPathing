@@ -7,10 +7,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import org.jetbrains.annotations.NotNull;
 
-/*
-* Drivetrain base class extended by MecanumDrive, TankDrive and SwerveDrive
-* @Author Sohum Arora 22985
-*/
+/**
+ * Drivetrain base class extended by MecanumDrive, TankDrive and SwerveDrive
+ * @author Krish Joshi - 26192 Heatwaves
+ * @author Sohum Arora 22985
+ */
 public abstract class Drivetrain {
     Telemetry telemetry;
     Boolean useBrakeMode;

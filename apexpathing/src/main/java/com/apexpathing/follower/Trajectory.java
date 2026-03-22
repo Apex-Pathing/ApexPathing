@@ -2,6 +2,7 @@ package com.apexpathing.follower;
 
 /**
  * Trajectory interface for the CustomDrive base class.
+ * @author Krish Joshi - 26192 Heatwaves
  */
 public interface Trajectory {
     /**

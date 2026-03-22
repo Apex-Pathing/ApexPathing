@@ -2,6 +2,7 @@ package com.apexpathing.kinematics;
 
 /**
  * Specialized MecanumKinematics class.
+ * @author Krish Joshi - 26192 Heatwaves
  * @author Krish - 26192 Heatwaves
  * @author Xander Haemel - 31616 404 not found
  */

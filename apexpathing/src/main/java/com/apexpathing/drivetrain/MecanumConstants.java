@@ -4,6 +4,9 @@ import com.apexpathing.util.math.Vector;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+/**
+ * @author Krish Joshi - 26192 Heatwaves
+ */
 public class MecanumConstants {
     public double xVelocity = 81.34056;
     public double yVelocity = 65.43028;

@@ -3,6 +3,7 @@ package com.apexpathing.kinematics;
 /**
  * Interface to allow HolonomicTrajectoryFollower to output a ChassisSpeeds object
  * which is then passed to either MecanumKinematics or SwerveKinematics.
+  * @author Krish Joshi - 26192 Heatwaves
  */
 public interface KinematicsSwitcher {
     /**

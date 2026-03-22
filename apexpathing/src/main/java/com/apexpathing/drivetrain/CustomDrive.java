@@ -8,8 +8,9 @@ import com.apexpathing.follower.TrajectorySample;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 /**
- * CustomDrive base class with centralized update loop, voltage compensation,
+ * CustomDrive base with centralized update loop, voltage compensation,
  * and state machine hooks.
+ * @author Krish Joshi - 26192 Heatwaves
  */
 public abstract class CustomDrive {
     protected Localizer localizer;

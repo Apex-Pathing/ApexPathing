@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * A utility to parameterize a spline by arc length.
  * Maps arc length distance s to spline parameter t.
+  * @author Krish Joshi - 26192 Heatwaves
  */
 public class ArcLengthParameterizer {
     private static final int SAMPLES = 100;

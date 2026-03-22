@@ -4,6 +4,7 @@ import com.apexpathing.util.math.Vector;
 
 /**
  * Specialized SwerveKinematics class.
+  * @author Krish Joshi - 26192 Heatwaves
  */
 public class SwerveKinematics extends Kinematics {
     private final Vector[] moduleOffsets;

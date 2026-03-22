@@ -5,6 +5,7 @@ import com.apexpathing.util.math.Pose;
 /**
  * A sample of a trajectory at a given time or distance.
  * Contains target pose, velocity, and acceleration.
+  * @author Krish Joshi - 26192 Heatwaves
  */
 public class TrajectorySample {
     public final Pose pose;

@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * A class that defines the Mecanum Drivetrain.
  * Now extends CustomDrive for centralized update logic.
+ * @author Krish Joshi - 26192 Heatwaves
  */
 public class MecanumDrive extends CustomDrive {
 

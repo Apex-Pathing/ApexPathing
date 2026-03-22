@@ -2,6 +2,7 @@ package com.apexpathing.kinematics;
 
 /**
  * Represents a swerve module's speed and angle.
+  * @author Krish Joshi - 26192 Heatwaves
  */
 public class SwerveModuleState {
     public final double speed;

@@ -5,6 +5,7 @@ import com.apexpathing.util.math.Vector;
 /**
  * A quintic Hermite spline solver and evaluator.
  * Solves for 5th-degree polynomial coefficients given start/end poses, velocities, and accelerations.
+  * @author Krish Joshi - 26192 Heatwaves
  */
 public class QuinticHermiteSpline {
     private final double[] xCoeffs;

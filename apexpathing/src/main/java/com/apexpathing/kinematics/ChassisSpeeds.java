@@ -2,6 +2,7 @@ package com.apexpathing.kinematics;
 
 /**
  * Represents robot-relative velocities.
+  * @author Krish Joshi - 26192 Heatwaves
  */
 public class ChassisSpeeds {
     public final double vx;

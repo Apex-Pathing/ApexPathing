@@ -7,6 +7,7 @@ import com.apexpathing.util.math.Pose;
 
 /**
  * Basic point-to-point follower class
+ * @author Krish Joshi - 26192 Heatwaves
  * @author Sohum Arora 22985 Paraducks
  */
 public class P2PFollower {
@@ -49,7 +50,7 @@ public class P2PFollower {
             double headingError = normalizeAngle(targetPose.heading() - currentPose.heading());
 
             Vector rotated = error.copy();
-            rotated.rotateVector(-currentPose.heading());
+            rotated.rotateVec(-currentPose.heading());
 
             double x = rotated.getXComponent() * translationalKp;
             double y = rotated.getYComponent() * translationalKp;

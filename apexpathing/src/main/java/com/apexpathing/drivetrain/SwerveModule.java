@@ -6,6 +6,7 @@ import com.apexpathing.hardware.AbsoluteAnalogEncoder;
 
 /**
  * Hardware wrapper handling a drive motor, turn motor (servo), and absolute encoder.
+  * @author Krish Joshi - 26192 Heatwaves
  */
 public class SwerveModule {
     private final MotorEx driveMotor;

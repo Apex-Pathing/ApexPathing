@@ -20,6 +20,7 @@ import java.util.List;
 
 /**
  * SwerveDrive implementation following the 5-part structure.
+  * @author Krish Joshi - 26192 Heatwaves
  */
 public class SwerveDrive extends CustomDrive {
     private final SwerveModule[] modules = new SwerveModule[4];
