@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.movement;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.firstinspires.ftc.teamcode.movement.geometry.Vector2d;
-import com.ApexPathing.main.follower.xpathing.QuinticHermiteSpline;
+import com.apexpathing.main.follower.xpathing.QuinticHermiteSpline;
 
 public class MovementTest {
     @Test
