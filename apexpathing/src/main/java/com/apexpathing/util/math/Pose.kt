@@ -29,7 +29,7 @@ import kotlin.math.sqrt
  *    - rotated
  *
  * @author Achintya Akula - 30099 OmicronX
- * @author Sohum Arora
+ * @author Sohum Arora - 22985 Paraducks
  * @author Topher Fontana - 23571 jEdison Knights
  */
 data class Pose
