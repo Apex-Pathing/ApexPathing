@@ -13,6 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A class that defines the Mecanum Drivetrain: a child class of the Drivetrain
+ * @author Krish 26192
+ * @author Xander Haemel- 31616
+ *
+ */
 public class MecanumDrive extends Drivetrain {
 
     private final List<DcMotorEx> motors;
@@ -30,6 +36,7 @@ public class MecanumDrive extends Drivetrain {
 
     MecanumConstants constants = new MecanumConstants();
 
+    //default constructor
     public MecanumDrive(HardwareMap hardwareMap, Telemetry telemetry, MecanumConstants mecanumConstants, @NotNull String leftFrontMotorName, @NotNull String rightFrontMotorName, @NotNull String leftRearMotorName, @NotNull String rightRearMotorName) {
         super(hardwareMap, telemetry, mecanumConstants.useBrakeModeInTeleOp, leftFrontMotorName, rightFrontMotorName, leftRearMotorName, rightRearMotorName);
 
@@ -62,7 +69,7 @@ public class MecanumDrive extends Drivetrain {
     }
 
     @Override
-    public void drive(double x, double y, double turn) {
+    public void driveBasedOnInputs(double x, double y, double turn) {
         botCentricDrive(x, y, turn);
     }
 
@@ -95,7 +102,7 @@ public class MecanumDrive extends Drivetrain {
         for (int i = 0; i < motors.size(); i++) {
             lastMotorPowers[i] = 0;
         }
-        stop();
+        cutMotorPower();
         setMotorsToFloat();
     }
 

@@ -37,7 +37,7 @@ public class TankDrive extends Drivetrain {
 
     //function that sets the powers based on input
     @Override
-    public void drive(double x, double y, double turn) {
+    public void driveBasedOnInputs(double x, double y, double turn) {
         double left  = Range.clip(y + turn, -1, 1);
         double right = Range.clip(y - turn, -1, 1);
         if (!fourWheelDrive) {
