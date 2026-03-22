@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D
-import com.apexpathing.geometry.Pose2d
+
 import com.apexpathing.util.math.Pose
 
 /**

@@ -1,6 +1,6 @@
 package com.apexpathing.localization;
 
-import com.apexpathing.geometry.Pose2d;
+
 import com.apexpathing.util.math.Pose;
 
 /**
