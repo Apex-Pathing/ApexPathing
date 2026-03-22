@@ -54,9 +54,9 @@ data class Vector
     var theta: Double
         get() = atan2(y, x)
         set(value) {
-            val _r = magnitude
-            x = _r * cos(value)
-            y = _r * sin(value)
+            val r = magnitude
+            x = r * cos(value)
+            y = r * sin(value)
         }
 
     /**
@@ -99,7 +99,7 @@ data class Vector
      * @return A new vector that is the rotated form of this vector
      */
     fun rotateVec(ang: Double) =
-        Vector.fromPolar(magnitude, normalize(this.theta + ang))
+        fromPolar(magnitude, normalize(this.theta + ang))
 
     /**
      * Function to rotate the given vector
@@ -203,4 +203,12 @@ data class Vector
      * @return The vector with info about x-y values and r-theta values
      */
     fun debug(): String = "Vector <x: $x, y: $y>, <magnitude: $magnitude, θ: $theta>"
+
+    /**
+     * Function to get a copy of this vector
+     *
+     * @return a copy of this vector
+     */
+    fun copy(): Vector =
+        Vector(x, y)
 }

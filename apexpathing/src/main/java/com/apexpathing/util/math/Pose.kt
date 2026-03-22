@@ -285,6 +285,14 @@ data class Pose
      * @return The string with x-y, heading, and coordSys information
      */
     fun debug(): String = "Pose { x: $x, y: $y, heading: $heading } in ${coordSystem.name()}"
+
+    /**
+     * Function to get a copy of a certain pose
+     *
+     * @return The copy of the current pose
+     */
+    fun copy(): Pose =
+        Pose(x, y, heading, coordSystem)
 }
 
 /**
