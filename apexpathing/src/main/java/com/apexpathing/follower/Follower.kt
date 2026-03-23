@@ -10,5 +10,8 @@ abstract class Follower {
 
     abstract fun setTarget(target: Pose)
 
-    abstract fun update(currentPose: Pose)
+    /**
+     * @return [DoubleArray] containing the powers to set the drivetrain to
+     */
+    abstract fun update(currentPose: Pose): DoubleArray
 }

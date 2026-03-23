@@ -13,7 +13,6 @@ import kotlin.math.sin
  * @author Topher Fontana -- 23571 Alum
  */
 class PTPFollower(
-    private val drive: Drivetrain,
     private val xController: Controller,
     private val yController: Controller,
     private val headingController: Controller,
@@ -35,8 +34,8 @@ class PTPFollower(
         isFinished = false
     }
 
-    override fun update(currentPose: Pose) {
-        if (isFinished) return
+    override fun update(currentPose: Pose): DoubleArray {
+        if (isFinished) return doubleArrayOf(0.0,0.0,0.0)
 
         if (currentPath.isFinished(currentPose)) {
             if (pathCounter < paths.size - 1) {
@@ -44,8 +43,7 @@ class PTPFollower(
                 setTarget(currentPath.sample(1.0).pose)
             } else {
                 isFinished = true
-                drive.drive(0.0, 0.0, 0.0)
-                return
+                return doubleArrayOf(0.0,0.0,0.0)
             }
         }
 
@@ -58,6 +56,6 @@ class PTPFollower(
         val robotX = xPower * cos - yPower * sin
         val robotY = xPower * sin + yPower * cos
 
-        drive.drive(robotX, robotY, turnPower)
+        return doubleArrayOf(robotX, robotY, turnPower)
     }
 }

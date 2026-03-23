@@ -23,9 +23,7 @@ public class QuinticLineTest extends LinearOpMode {
         MecanumConstants constants = new MecanumConstants();
         MecanumDrive drive = new MecanumDrive(
                 hardwareMap,
-                localizer,
-                constants,
-                "fl", "fr", "bl", "br"
+                constants
         );
 
         // 3. Define Trajectory
@@ -53,6 +51,7 @@ public class QuinticLineTest extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        /*
         drive.followTrajectory(trajectory);
 
         while (opModeIsActive() && drive.isBusy()) {
@@ -66,5 +65,7 @@ public class QuinticLineTest extends LinearOpMode {
         }
 
         drive.setDrivePowers(new Pose(0, 0, 0));
+
+         */
     }
 }
