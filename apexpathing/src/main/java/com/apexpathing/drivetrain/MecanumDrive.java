@@ -29,13 +29,19 @@ public class MecanumDrive extends Drivetrain {
     private final HardwareMap hardwareMap;
     private final MecanumConstants constants;
 
-    public MecanumDrive(HardwareMap hardwareMap, MecanumConstants constants) {
+    public MecanumDrive(HardwareMap hardwareMap, MecanumConstants constants, Localizer localizer) {
+        super(hardwareMap, null, localizer);
+
         this.hardwareMap = hardwareMap;
         this.constants = constants;
         this.leftFrontMotorName=constants.leftFrontMotorName;
         this.leftRearMotorName=constants.leftRearMotorName;
         this.rightFrontMotorName=constants.rightFrontMotorName;
         this.rightRearMotorName=constants.rightRearMotorName;
+
+    }
+
+    public void setStartPose(Pose startPose) {
     }
 
     private void initDriveTrain(MecanumConstants constants) {
