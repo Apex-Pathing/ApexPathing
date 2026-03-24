@@ -27,7 +27,7 @@ class Apex(var localizer: LocalizerBase, var follower: Follower, var drivetrain:
 
 
     fun attach(context: Context, eventLoop: EventLoop) {
-        if(debug) RobotLog.ii("MooseX", "attachEventLoop: Attached MooseX to Event Loop")
+        if(debug) RobotLog.ii("Apex", "attachEventLoop: Attached Apex to Event Loop")
         eventLoop.opModeManager.registerListener(this)
         this.manager = eventLoop.opModeManager
     }
@@ -35,8 +35,8 @@ class Apex(var localizer: LocalizerBase, var follower: Follower, var drivetrain:
     override fun onOpModePreInit(opMode: OpMode) {
         if (opMode.javaClass.isAnnotationPresent(Pathing::class.java)) {
             localizer.initLocalizer(opMode.hardwareMap)
-            drivetrain.setHardwareMap(opMode.hardwareMap)
-            drivetrain.initDriveTrain()
+            drivetrain.initDriveTrain(opMode.hardwareMap)
+
 
             if (!running) {
                 running = true

@@ -9,6 +9,7 @@ import com.apexpathing.util.math.Vector;
 import com.apexpathing.localization.Localizer;
 import com.apexpathing.follower.HolonomicTrajectoryFollower;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -25,18 +26,35 @@ public class MecanumDrive extends Drivetrain {
 
     private DcMotorEx leftFront, leftRear, rightFront, rightRear;
     private final String leftFrontMotorName, leftRearMotorName, rightFrontMotorName, rightRearMotorName;
-
-    private final HardwareMap hardwareMap;
     private final MecanumConstants constants;
 
-    public MecanumDrive(HardwareMap hardwareMap, MecanumConstants constants) {
-        this.hardwareMap = hardwareMap;
+    public MecanumDrive(MecanumConstants constants) {
+        super();
         this.constants = constants;
         this.leftFrontMotorName=constants.leftFrontMotorName;
         this.leftRearMotorName=constants.leftRearMotorName;
         this.rightFrontMotorName=constants.rightFrontMotorName;
         this.rightRearMotorName=constants.rightRearMotorName;
     }
+
+    public MecanumDrive(MecanumConstants constants, Telemetry telemetry) {
+        super(telemetry);
+        this.constants = constants;
+        this.leftFrontMotorName=constants.leftFrontMotorName;
+        this.leftRearMotorName=constants.leftRearMotorName;
+        this.rightFrontMotorName=constants.rightFrontMotorName;
+        this.rightRearMotorName=constants.rightRearMotorName;
+    }
+
+    public MecanumDrive(MecanumConstants constants, Telemetry telemetry, boolean useBrakeMode) {
+        super(telemetry, useBrakeMode);
+        this.constants = constants;
+        this.leftFrontMotorName=constants.leftFrontMotorName;
+        this.leftRearMotorName=constants.leftRearMotorName;
+        this.rightFrontMotorName=constants.rightFrontMotorName;
+        this.rightRearMotorName=constants.rightRearMotorName;
+    }
+
 
     private void initDriveTrain(MecanumConstants constants) {
 
@@ -62,7 +80,7 @@ public class MecanumDrive extends Drivetrain {
     }
 
     @Override
-    public void initDriveTrain() {
+    public void initDriveTrain(HardwareMap hardwareMap) {
         leftFront = (DcMotorEx)hardwareMap.get(DcMotor.class, leftFrontMotorName);
         leftRear = (DcMotorEx)hardwareMap.get(DcMotor.class, leftRearMotorName);
         rightFront = (DcMotorEx)hardwareMap.get(DcMotor.class, rightFrontMotorName);

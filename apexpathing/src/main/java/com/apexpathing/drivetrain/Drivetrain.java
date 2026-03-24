@@ -21,28 +21,17 @@ public abstract class Drivetrain {
     public Drivetrain() {
         this.telemetry = null;
     }
-    public Drivetrain(HardwareMap hardwareMap,
-                      Telemetry telemetry) {
-        this.hardwareMap = hardwareMap;
+    public Drivetrain(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
 
-    public Drivetrain(HardwareMap hardwareMap) {
-        this.hardwareMap = hardwareMap;
-        this.telemetry = null;
-    }
 
-    public Drivetrain(HardwareMap hardwareMap, Telemetry telemetry, boolean useBrakeMode) {
-        this.hardwareMap = hardwareMap;
+    public Drivetrain(Telemetry telemetry, boolean useBrakeMode) {
         this.telemetry = null;
         this.useBrakeMode = useBrakeMode;
     }
 
-    public abstract void initDriveTrain();
-
-    public void setHardwareMap(HardwareMap hw) {
-        this.hardwareMap = hw;
-    }
+    public abstract void initDriveTrain(HardwareMap hardwareMap);
 
     public abstract void drive(double ...args);
 

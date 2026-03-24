@@ -19,37 +19,37 @@ public class TankDrive extends Drivetrain {
     String leftFrontName, rightFrontName, leftRearName, rightRearName;
 
 
-    public TankDrive(HardwareMap hardwareMap, Telemetry telemetry,
+    public TankDrive(Telemetry telemetry,
                      boolean useBrakeMode,
                      @NotNull String leftFrontName,
                      @NotNull String rightFrontName
                      ) { //2wd tank drive constructor
-        super(hardwareMap,telemetry, useBrakeMode);
+        super(telemetry, useBrakeMode);
         this.leftFrontName = leftFrontName;
-        this.rightFrontName=rightFrontName;
+        this.rightFrontName = rightFrontName;
         this.FourWheelDrive = false;
     }
 
-    @Override
-    public void initDriveTrain() {
-        leftFront = (DcMotorEx)hardwareMap.get(DcMotor.class, leftFrontName);
-        rightFront = (DcMotorEx)hardwareMap.get(DcMotor.class, rightFrontName);
-    }
-
-    public TankDrive(HardwareMap hardwareMap,
-                     Telemetry telemetry,
+    public TankDrive(Telemetry telemetry,
                      boolean useBrakeMode,
                      @NotNull String leftFrontName,
                      @NotNull String rightFrontName,
                      @NotNull String leftRearName,
                      @NotNull String rightRearName) { //4wd tank
-        super(hardwareMap, telemetry, useBrakeMode);
+        super(telemetry, useBrakeMode);
+        this.leftFrontName = leftFrontName;
+        this.rightFrontName = rightFrontName;
+        this.leftRearName = leftRearName;
+        this.rightRearName = rightRearName;
+        this.FourWheelDrive = true;
+    }
+
+    @Override
+    public void initDriveTrain(HardwareMap hardwareMap) {
         leftFront = (DcMotorEx)hardwareMap.get(DcMotor.class, leftFrontName);
         rightFront = (DcMotorEx)hardwareMap.get(DcMotor.class, rightFrontName);
         leftRear = (DcMotorEx)hardwareMap.get(DcMotor.class, leftRearName);
         rightRear = (DcMotorEx)hardwareMap.get(DcMotor.class, rightRearName);
-
-        this.FourWheelDrive = true;
     }
 
     /**

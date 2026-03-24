@@ -28,4 +28,8 @@ class Path(private val trajectories: List<Trajectory>, private val threshold: Do
 
         return trajectories[index].sample(localT)
     }
+
+    override fun length(): Double {
+        return trajectories.sumOf { it.length() }
+    }
 }
