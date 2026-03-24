@@ -1,11 +1,10 @@
 package com.apexpathing.drivetrain;
 
+import com.apexpathing.localization.Localizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Drivetrain base class extended by MecanumDrive, TankDrive and SwerveDrive
@@ -17,14 +16,17 @@ public abstract class Drivetrain {
     Boolean useBrakeMode;
 
     public HardwareMap hardwareMap;
+    private Localizer localizer;
 
     public Drivetrain() {
         this.telemetry = null;
     }
     public Drivetrain(HardwareMap hardwareMap,
-                      Telemetry telemetry) {
+                      Telemetry telemetry,
+                      Localizer localizer) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
+        this.localizer = localizer;
     }
 
     public Drivetrain(HardwareMap hardwareMap) {
@@ -36,6 +38,10 @@ public abstract class Drivetrain {
         this.hardwareMap = hardwareMap;
         this.telemetry = null;
         this.useBrakeMode = useBrakeMode;
+    }
+
+    public final void update() {
+        localizer.update();
     }
 
     public abstract void initDriveTrain();
