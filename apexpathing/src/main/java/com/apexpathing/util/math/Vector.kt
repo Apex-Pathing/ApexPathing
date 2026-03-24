@@ -74,6 +74,8 @@ data class Vector
      */
     fun getYComponent() = y
 
+
+
     /**
      * Calculates the dot product of this vector and another vector
      *
@@ -213,6 +215,10 @@ data class Vector
      * @return The vector with info about x-y values and r-theta values
      */
     fun debug(): String = "Vector <x: $x, y: $y>, <magnitude: $magnitude, θ: $theta>"
+
+    fun getMagnitude(): Double = magnitude
+    fun getTheta(): Double = theta
+
 
     /**
      * Function to get a copy of this vector

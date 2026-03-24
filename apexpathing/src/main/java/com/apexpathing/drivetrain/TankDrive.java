@@ -1,6 +1,5 @@
 package com.apexpathing.drivetrain;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
@@ -13,73 +12,52 @@ import org.jetbrains.annotations.NotNull;
  */
 public class TankDrive extends Drivetrain {
 
-    boolean FourWheelDrive;
+    private final boolean fourWheelDrive;
 
-    DcMotorEx leftFront, rightFront, leftRear, rightRear;
-    String leftFrontName, rightFrontName, leftRearName, rightRearName;
-
-
+    // 4wd tank constructor
     public TankDrive(HardwareMap hardwareMap, Telemetry telemetry,
                      boolean useBrakeMode,
                      @NotNull String leftFrontName,
-                     @NotNull String rightFrontName
-                     ) { //2wd tank drive constructor
-        super(hardwareMap,telemetry, useBrakeMode);
-        this.leftFrontName = leftFrontName;
-        this.rightFrontName=rightFrontName;
-        this.FourWheelDrive = false;
+                     @NotNull String rightFrontName) {
+        super(hardwareMap, telemetry, useBrakeMode,
+                leftFrontName, rightFrontName, leftFrontName, rightFrontName);
+        this.fourWheelDrive = false;
     }
 
-    @Override
-    public void initDriveTrain() {
-        leftFront = (DcMotorEx)hardwareMap.get(DcMotor.class, leftFrontName);
-        rightFront = (DcMotorEx)hardwareMap.get(DcMotor.class, rightFrontName);
-    }
-
-    public TankDrive(HardwareMap hardwareMap,
-                     Telemetry telemetry,
+    // 4wd tank constructor
+    public TankDrive(HardwareMap hardwareMap, Telemetry telemetry,
                      boolean useBrakeMode,
                      @NotNull String leftFrontName,
                      @NotNull String rightFrontName,
                      @NotNull String leftRearName,
-                     @NotNull String rightRearName) { //4wd tank
-        super(hardwareMap, telemetry, useBrakeMode);
-        leftFront = (DcMotorEx)hardwareMap.get(DcMotor.class, leftFrontName);
-        rightFront = (DcMotorEx)hardwareMap.get(DcMotor.class, rightFrontName);
-        leftRear = (DcMotorEx)hardwareMap.get(DcMotor.class, leftRearName);
-        rightRear = (DcMotorEx)hardwareMap.get(DcMotor.class, rightRearName);
-
-        this.FourWheelDrive = true;
+                     @NotNull String rightRearName) {
+        super(hardwareMap, telemetry, useBrakeMode,
+                leftFrontName, rightFrontName, leftRearName, rightRearName);
+        this.fourWheelDrive = true;
     }
 
-    /**
-     * @param args, an array of doubles that correspond to [1] == y, [2] == turn
-     */
     @Override
-    public void drive(double ...args) {
-        double x = args[0]; // Ignore this argument
-        double y = args[1];
-        double turn = args[2];
+    public void drive(double x, double y, double turn) {
+        double left  = Range.clip(y + turn, -1, 1);
+        double right = Range.clip(y - turn, -1, 1);
 
-        double left = y + turn;
-        double right = y - turn;
+        setPower(leftFront, left);
+        setPower(rightFront, right);
 
-        left = Range.clip(left, -1, 1);
-        right = Range.clip(right, -1, 1);
-
-        if (!FourWheelDrive) {
-            setPower(leftFront, left);
-            setPower(rightFront, right);
-        } else {
-            setPower(leftFront, left);
-            setPower(rightFront, right);
+        if (fourWheelDrive) {
             setPower(leftRear, left);
             setPower(rightRear, right);
         }
     }
 
     @Override
+    public void driveFieldCentric(double x, double y, double turn, double heading) {
+        //Tank has no field centric option
+        drive(x, y, turn);
+    }
+
+    @Override
     public void turn(double power) {
-        drive(0.0,power);
+        drive(0, 0, power);
     }
 }
