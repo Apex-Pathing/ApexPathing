@@ -46,6 +46,7 @@ class PinpointLocalizer(
 
         currentVelocity.x = (currentPosition.x - lastPosition.x)
         currentVelocity.y = (currentPosition.y - lastPosition.y)
+        currentVelocity.theta = (currentPosition.heading - lastPosition.heading)
     }
 
     override fun getPose(): Pose = currentPosition
