@@ -31,13 +31,14 @@ public class MecanumDriveTest extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        MecanumConstants constants = new MecanumConstants();
-        MecanumDrive drive = new MecanumDrive(
-                hardwareMap, telemetry, constants,
-                lF, rF, lR, rR
-        );
         localizer = new PinpointLocalizer(hardwareMap, localizerName,localizerXOffset,localizerYOffset);
         localizer.init();
+        MecanumConstants constants = new MecanumConstants();
+        MecanumDrive drive = new MecanumDrive(
+                hardwareMap, localizer, telemetry, constants,
+                lF, rF, lR, rR
+        );
+
 
         telemetry.addLine("Mecanum Drivetrain Movement Test");
         telemetry.addLine("Y - toggle field centric and bot centric");
